@@ -18,14 +18,14 @@ stdin.on('end', () => {
 
 // TODO: put in its own file. This current one shall be for test usage
 function stringifyObject(obj) {
-  var baseStr = '';
+  var jsonStr = '';
 
   removeUndefinedProps(obj); // TODO: verify usefulness, maybe unnecessary...
 
   var keys = Object.keys(obj),
     keysLen = keys.length;
   keys.forEach((key, ind) => {
-    var val,
+    let val,
       type = typeof obj[key];
 
     if (obj[key] === null)
@@ -42,12 +42,11 @@ function stringifyObject(obj) {
     if (ind !== keysLen - 1) // no "," after the last prop
       val = val.concat(',');
 
-    val = '\"'.concat(escapeString(key), '\":', val);
-    baseStr = baseStr.concat(val);
+    let keyVal = '\"'.concat(escapeString(key), '\":', val);
+    jsonStr = jsonStr.concat(keyVal);
   });
 
-  baseStr = '{'.concat(baseStr, '}');
-  return baseStr;
+  return '{'.concat(jsonStr, '}'); // wrap object
 }
 
 function removeUndefinedProps(obj) {
