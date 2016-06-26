@@ -1,31 +1,4 @@
 const _ = require('lodash');
-const fs = require('fs');
-
-var input = '',
-  stdin = process.stdin;
-stdin.setEncoding('utf8');
-
-
-stdin.on('data', (chunk) => {
-  input += chunk;
-});
-
-stdin.on('end', () => {
-  var inputJSON = JSON.parse(input);
-
-  var homeMadeJsonStart = new Date().getTime();
-  var homeMadeJson = stringify(inputJSON);
-  var homeMadeJsonStop = new Date().getTime();
-
-  var normalJsonStart = new Date().getTime();
-  var normalJson = JSON.stringify(inputJSON);
-  var normalJsonStop = new Date().getTime();
-
-  fs.writeFileSync('normal.json', normalJson, 'utf8');
-  fs.writeFileSync('homeMade.json', homeMadeJson, 'utf8'); // if `diff normal.json homeMade.json` is empty, it worked
-  console.log(`HomeMade JSON: ${homeMadeJsonStop - homeMadeJsonStart}ms`);
-  console.log(`Normal JSON: ${normalJsonStop - normalJsonStart}ms`);
-});
 
 function stringify(json) {
   let type = typeof json;
@@ -42,11 +15,8 @@ function stringify(json) {
     return stringifyObject(json);
 }
 
-// TODO: put in its own file. This current one shall be for test usage
 function stringifyObject(obj) {
   var jsonStr = '';
-
-  removeUndefinedProps(obj); // TODO: verify usefulness, maybe unnecessary...
 
   var keys = Object.keys(obj),
     keysLen = keys.length;
@@ -81,12 +51,6 @@ function stringifyArray(arr) {
   return '['.concat(jsonStr, ']'); // wrap object
 }
 
-function removeUndefinedProps(obj) {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key] === undefined) delete obj[key];
-  });
-}
-
 function changeUndefinedToNull(arr) {
   arr.map((elem) => {
     return elem === undefined ?
@@ -98,3 +62,9 @@ function changeUndefinedToNull(arr) {
 function escapeString(str) {
   return str.replace(/(["\\])/g, "\\$1");
 }
+
+
+var stringifyModule = {
+  stringify: stringify
+};
+module.exports = stringifyModule;
