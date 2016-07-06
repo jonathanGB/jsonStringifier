@@ -1,5 +1,7 @@
 const fs = require('fs');
 const _JSON = require('./stringifier');
+const _JSON2 = require('./parser');
+const _ = require('lodash')
 
 var input = '',
   stdin = process.stdin;
@@ -12,6 +14,8 @@ stdin.on('data', (chunk) => {
 
 stdin.on('end', () => {
   var inputJSON = JSON.parse(input);
+  var inputJSON2 = _JSON2.parse(input);
+  console.log(`equal? ${_.isEqual(inputJSON, inputJSON2)}`);
 
   var homeMadeJsonStart = new Date().getTime();
   var homeMadeJson = _JSON.stringify(inputJSON);
